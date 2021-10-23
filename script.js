@@ -55,18 +55,44 @@ for (let index = 0; index < n_circle; index++) {
     x = Math.random() * (width - 100) + 50;
     y = Math.random() * (height - 100) + 50;
 
+    speed_x = Math.random();
+    speed_y = Math.sqrt(1-speed_x**2);
+
+    if (Math.round(Math.random())){
+        speed_x = -1*speed_x;
+    }
+    if (Math.round(Math.random())){
+        speed_y = -1*speed_y;
+    }
+
+
     var circle = new Circle(x, y, 50);
     var entity = new Entity(circle, Color.blue);
-    entity.speed.x = 10;
-    entity.speed.y = 10;
+    entity.speed.x = 10 * speed_x;
+    entity.speed.y = 10 * speed_y;
     render_list.push(entity);
 }
 
 function game_loop(){
+    render_list.forEach(circle => {
+        if (circle.collider.x - circle.collider.r < 0){
+            circle.speed.x = Math.abs(circle.speed.x);
+        }
+        
+        if (circle.collider.x + circle.collider.r > width){
+            circle.speed.x = -Math.abs(circle.speed.x);
+        }
 
+        if (circle.collider.y - circle.collider.r < 0){
+            circle.speed.y = Math.abs(circle.speed.y);
+        }
+        
+        if (circle.collider.y + circle.collider.r > height){
+            circle.speed.y = -Math.abs(circle.speed.y);
+        }
 
+    });
 
-    
     // Update
     render_list.forEach(circle => {
         circle.update()
