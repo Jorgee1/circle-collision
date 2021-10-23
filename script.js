@@ -48,9 +48,9 @@ var height = canvas.height;
 var n_circle = 50
 var step = 10
 
-var c = new Entity(new Circle(100, 100, 100), Color.red)
+var p1 = new Entity(new Circle(width/2, height/2, 100), Color.red)
 
-var render_list = [c]
+var render_list = [p1]
 for (let index = 0; index < n_circle; index++) {
     x = Math.random() * (width - 100) + 50;
     y = Math.random() * (height - 100) + 50;
@@ -74,21 +74,32 @@ for (let index = 0; index < n_circle; index++) {
 }
 
 function game_loop(){
-    render_list.forEach(circle => {
-        if (circle.collider.x - circle.collider.r < 0){
-            circle.speed.x = Math.abs(circle.speed.x);
-        }
-        
-        if (circle.collider.x + circle.collider.r > width){
-            circle.speed.x = -Math.abs(circle.speed.x);
+    render_list.slice(1).forEach(c => {
+
+        if (check_circle_collition(p1.collider, c.collider)){
+            c.speed.x = -p1.collider.x + c.collider.x;
+            c.speed.y = -p1.collider.y + c.collider.y;
+
+            mag = Math.sqrt(c.speed.x**2 + c.speed.y**2);
+            c.speed.x = 10*c.speed.x/mag;
+            c.speed.y = 10*c.speed.y/mag;
         }
 
-        if (circle.collider.y - circle.collider.r < 0){
-            circle.speed.y = Math.abs(circle.speed.y);
+
+        if (c.collider.x - c.collider.r < 0){
+            c.speed.x = Math.abs(c.speed.x);
         }
         
-        if (circle.collider.y + circle.collider.r > height){
-            circle.speed.y = -Math.abs(circle.speed.y);
+        if (c.collider.x + c.collider.r > width){
+            c.speed.x = -Math.abs(c.speed.x);
+        }
+
+        if (c.collider.y - c.collider.r < 0){
+            c.speed.y = Math.abs(c.speed.y);
+        }
+        
+        if (c.collider.y + c.collider.r > height){
+            c.speed.y = -Math.abs(c.speed.y);
         }
 
     });
